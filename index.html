@@ -5,56 +5,81 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>英轩集团三十周年庆典大会座区查询</title>
   <style>
-    body {
+    * {
+      box-sizing: border-box;
       margin: 0;
       padding: 0;
+    }
+
+    body {
       min-height: 100vh;
       background-image: url('1.png');
       background-size: cover;
       background-position: center;
+      background-repeat: no-repeat;
       font-family: 'Microsoft YaHei', sans-serif;
       display: flex;
       justify-content: center;
       align-items: center;
-      position: relative;
+      padding: 10px;
     }
 
     .container {
-      width: 90%;
-      max-width: 1200px;
-      height: 80%;
       display: flex;
-      overflow: hidden;
+      width: 100%;
+      max-width: 1200px;
+      height: 85vh;
+      background: rgba(255, 255, 255, 0.88);
+      backdrop-filter: blur(8px);
       border-radius: 16px;
-      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+      overflow: hidden;
+      box-shadow: 0 8px 30px rgba(0, 0, 0, 0.2);
     }
 
-    .left-side, .right-side {
-      width: 50%;
-      padding: 30px;
-      box-sizing: border-box;
+    .left-side {
+      width: 45%;
+      padding: 25px;
       display: flex;
       flex-direction: column;
+      gap: 16px;
+    }
+
+    .right-side {
+      width: 55%;
+      display: flex;
       justify-content: center;
       align-items: center;
+      padding: 15px;
+    }
+
+    .right-side img {
+      max-width: 100%;
+      max-height: 100%;
+      object-fit: contain;
+      border-radius: 10px;
     }
 
     h1 {
-      color: #333;
+      font-size: 19px;
       font-weight: bold;
-      font-size: 20px;
+      color: #222;
+      text-align: center;
       white-space: nowrap;
-      margin-bottom: 20px;
+      overflow: hidden;
+      text-overflow: ellipsis;
     }
 
-    input[type="text"] {
+    input {
       width: 100%;
       padding: 12px;
-      margin: 10px 0;
       border: 1px solid #ccc;
       border-radius: 8px;
       font-size: 16px;
-      box-sizing: border-box;
+      outline: none;
+    }
+
+    input:focus {
+      border-color: #007bff;
     }
 
     button {
@@ -66,18 +91,22 @@
       border-radius: 8px;
       font-size: 16px;
       cursor: pointer;
+      transition: background 0.2s;
     }
 
     button:hover {
       background-color: #0056b3;
     }
 
-    .seat-map {
-      width: 100%;
-      max-width: 100%;
-      height: auto;
+    .result-card {
+      background-color: #eef7ff;
+      border-left: 4px solid #007bff;
+      padding: 16px;
       border-radius: 8px;
-      object-fit: contain;
+      font-size: 18px;
+      color: #333;
+      line-height: 1.5;
+      display: none;
     }
   </style>
 </head>
@@ -86,38 +115,55 @@
 <div class="container">
   <div class="left-side">
     <h1>🎉 英轩集团三十周年庆典大会座区查询 🎉</h1>
-    <input type="text" id="nameInput" placeholder="输入您的名字" />
-    <input type="text" id="numberInput" placeholder="输入您的工号" />
+    <input type="text" id="nameInput" placeholder="请输入您的姓名" />
+    <input type="text" id="numberInput" placeholder="请输入您的工号" />
     <button onclick="findSeat()">查询座区</button>
-    <div class="result" id="seatResult"></div>
+    <div class="result-card" id="resultCard"></div>
   </div>
+
   <div class="right-side">
-    <img src="111.png" alt="座位图" class="seat-map" />
+    <img src="111.png" alt="会场座区图" />
   </div>
 </div>
 
 <script>
+  // ✅ 请在此处填写实际参会人员名单
   const seatData = [
-    // 座位数据（请按实际名单填写）
+    { name: "张三", number: "12345", area: "A区", table: "3桌", seat: "5号" },
+    { name: "李四", number: "67890", area: "B区", table: "2桌", seat: "1号" },
+    { name: "王五", number: "13579", area: "C区", table: "1桌", seat: "8号" },
+    // 👆 按照此格式继续添加真实数据
   ];
 
   function findSeat() {
     const name = document.getElementById("nameInput").value.trim();
     const number = document.getElementById("numberInput").value.trim();
+    const resultDiv = document.getElementById("resultCard");
 
     if (!name || !number) {
-      alert("请输入姓名及工号后再查询。");
+      resultDiv.innerHTML = "⚠️ 请输入姓名和工号后再查询。";
+      resultDiv.style.display = "block";
       return;
     }
 
-    const matches = seatData.filter(item => item.name === name && item.number === number);
+    const match = seatData.find(item => item.name === name && item.number === number);
 
-    if (matches.length === 0) {
-      alert(`未找到与“${name}”和工号“${number}”相关的座区信息，请联系现场工作人员。`);
+    if (match) {
+      resultDiv.innerHTML = `
+        <strong>${name}</strong><br>
+        您的座区信息：<br>
+        <span style="font-size:20px; color:#007bff; font-weight:bold;">
+          ${match.area} ${match.table} ${match.seat}
+        </span>
+      `;
     } else {
-      const item = matches[0];
-      document.getElementById("seatResult").textContent = `您的座区是：${item.area} ${item.table} ${item.seat}`;
+      resultDiv.innerHTML = `
+        ❌ 未找到“${name}”（工号 ${number}）的座区信息。<br>
+        请联系现场工作人员。
+      `;
     }
+
+    resultDiv.style.display = "block";
   }
 </script>
 
