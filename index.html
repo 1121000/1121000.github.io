@@ -8,37 +8,49 @@
     body {
       margin: 0;
       padding: 0;
-      height: 100vh;
-      background-image: url('1.png'); /* 替换为你的背景图片 */
+      min-height: 100vh;
+      background-image: url('1.png');
       background-size: cover;
       background-position: center;
-      background-repeat: no-repeat;
       font-family: 'Microsoft YaHei', sans-serif;
       display: flex;
       justify-content: center;
       align-items: center;
+      position: relative;
     }
 
     .container {
-      background-color: rgba(255, 255, 255, 0.9);
-      padding: 30px;
-      border-radius: 15px;
-      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
       width: 90%;
-      max-width: 600px;
-      text-align: center;
+      max-width: 1200px;
+      height: 80%;
+      display: flex;
+      overflow: hidden;
+      border-radius: 16px;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    }
+
+    .left-side, .right-side {
+      width: 50%;
+      padding: 30px;
+      box-sizing: border-box;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
     }
 
     h1 {
       color: #333;
       font-weight: bold;
+      font-size: 20px;
+      white-space: nowrap;
+      margin-bottom: 20px;
     }
 
-    input[type='text'],
-    button {
-      width: calc(100% - 20px);
+    input[type="text"] {
+      width: 100%;
       padding: 12px;
-      margin-top: 10px;
+      margin: 10px 0;
       border: 1px solid #ccc;
       border-radius: 8px;
       font-size: 16px;
@@ -46,8 +58,13 @@
     }
 
     button {
+      width: 100%;
+      padding: 12px;
       background-color: #007bff;
       color: white;
+      border: none;
+      border-radius: 8px;
+      font-size: 16px;
       cursor: pointer;
     }
 
@@ -55,60 +72,54 @@
       background-color: #0056b3;
     }
 
-    .result {
-      margin-top: 20px;
-      font-size: 18px;
-      color: #d32f2f;
-      font-weight: bold;
+    .seat-map {
+      width: 100%;
+      max-width: 100%;
+      height: auto;
+      border-radius: 8px;
+      object-fit: contain;
     }
   </style>
 </head>
 <body>
-  <div class="container">
-    <h1>🎉 英轩集团三十周年庆典大会座区查询 🎉</h1>
-    <p>请输入您的名字及工号以查询您的座区信息。</p>
 
+<div class="container">
+  <div class="left-side">
+    <h1>🎉 英轩集团三十周年庆典大会座区查询 🎉</h1>
     <input type="text" id="nameInput" placeholder="输入您的名字" />
     <input type="text" id="numberInput" placeholder="输入您的工号" />
     <button onclick="findSeat()">查询座区</button>
-
     <div class="result" id="seatResult"></div>
   </div>
+  <div class="right-side">
+    <img src="111.png" alt="座位图" class="seat-map" />
+  </div>
+</div>
 
-  <script>
+<script>
+  const seatData = [
     // 座位数据（请按实际名单填写）
-    const seatData = [
-      { name: "张三", number: "12345", area: "A区", table: "3桌", seat: "5号" },
-      { name: "李四", number: "67890", area: "B区", table: "2桌", seat: "1号" },
-      { name: "王五", number: "13579", area: "C区", table: "1桌", seat: "8号" },
-      { name: "张三", number: "24680", area: "D区", table: "4桌", seat: "2号" }, // 示例：重名但工号不同
-      // 👆 你可以在这里添加更多数据
-    ];
+  ];
 
-    function findSeat() {
-      const name = document.getElementById("nameInput").value.trim();
-      const number = document.getElementById("numberInput").value.trim();
-      const resultDiv = document.getElementById("seatResult");
+  function findSeat() {
+    const name = document.getElementById("nameInput").value.trim();
+    const number = document.getElementById("numberInput").value.trim();
 
-      if (!name || !number) {
-        resultDiv.innerHTML = "请输入姓名及工号后再查询。";
-        return;
-      }
-
-      // 查找所有匹配的名字和工号（支持完全匹配）
-      const matches = seatData.filter((item) => item.name === name && item.number === number);
-
-      if (matches.length === 0) {
-        resultDiv.innerHTML = `未找到与“${name}”和工号“${number}”相关的座区信息，请联系现场工作人员。`;
-      } else if (matches.length === 1) {
-        const item = matches[0];
-        resultDiv.innerHTML = `${name} 的座区是：<br><strong>${item.area} ${item.table} ${item.seat}</strong>`;
-      } else {
-        // 理论上此处不会被触发，因为名字加工号应该是唯一的
-        resultDiv.innerHTML = `发现多个“${name}”的记录。<br>如有重名，请联系现场工作人员确认。`;
-      }
+    if (!name || !number) {
+      alert("请输入姓名及工号后再查询。");
+      return;
     }
-  </script>
-</body>
 
+    const matches = seatData.filter(item => item.name === name && item.number === number);
+
+    if (matches.length === 0) {
+      alert(`未找到与“${name}”和工号“${number}”相关的座区信息，请联系现场工作人员。`);
+    } else {
+      const item = matches[0];
+      document.getElementById("seatResult").textContent = `您的座区是：${item.area} ${item.table} ${item.seat}`;
+    }
+  }
+</script>
+
+</body>
 </html>
